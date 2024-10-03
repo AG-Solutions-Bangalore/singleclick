@@ -416,9 +416,8 @@ const MemberEdit = () => {
                 className="w-full border border-gray-700 rounded-md p-2"
               />
             </div>
-
             {/* Photo */}
-            <div>
+            {/* <div>
               <Input
                 label="Photo"
                 type="file"
@@ -428,8 +427,8 @@ const MemberEdit = () => {
               />
 
               <small>{member.photo}</small>
-            </div>
-            {/* <div
+            </div> */}
+            <div
               className={`${inputClass} flex items-center justify-between h-12 `}
             >
               <div className="flex items-center space-x-4">
@@ -439,12 +438,17 @@ const MemberEdit = () => {
                   className="w-10 h-10 rounded-lg border-2 border-gray-300"
                 />
                 <button
+                  type="button"
                   className={`${inputClass} bg-white hover:bg-gray-50 text-gray-700 text-sm`}
-                  onClick={() => setModalOpen(true)}
+                  // onClick={() => setModalOpen(true)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setModalOpen(true);
+                  }}
                 >
                   Choose Image
                 </button>
-                <small>{member.photo}</small>
+                <small className=" text-[10px]">{member.photo}</small>
               </div>
 
               {modalOpen && (
@@ -454,10 +458,9 @@ const MemberEdit = () => {
                   closeModal={() => setModalOpen(false)}
                 />
               )}
-            </div> */}
+            </div>
 
             {/* Status */}
-
             <FormControl fullWidth>
               <InputLabel id="service-select-label">
                 <span className="text-sm relative bottom-[6px]">
@@ -510,7 +513,7 @@ const MemberEdit = () => {
               </div>
             </Button>
 
-            <Link to="/member-list">
+            <Link to="/">
               <Button className="mr-2 mb-2">
                 <div className="flex gap-1">
                   <MdArrowBack className="w-4 h-4" />

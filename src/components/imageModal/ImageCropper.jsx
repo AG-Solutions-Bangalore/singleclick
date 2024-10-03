@@ -89,7 +89,7 @@ const ImageCropper = ({ closeModal, updateAvatar, onFileChange }) => {
           type="file"
           accept="image/*"
           onChange={onSelectFile}
-          className="block w-full text-sm text-slate-500 file:mr-4 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:bg-gray-700 file:text-sky-300 hover:file:bg-gray-600"
+          className="block w-full text-sm text-red-500 file:mr-4 file:py-1 file:px-2 file:rounded-full file:border-0 file:text-xs file:bg-blue-700 file:text-sky-300 hover:file:bg-red-600"
         />
       </label>
       {error && <p className="text-red-400 text-xs">{error}</p>}
@@ -112,7 +112,7 @@ const ImageCropper = ({ closeModal, updateAvatar, onFileChange }) => {
             />
           </ReactCrop>
           <button
-            className="text-white font-mono text-xs py-2 px-4 rounded-2xl mt-4 bg-sky-500 hover:bg-sky-600"
+            className="text-white font-mono bg-red-400 text-xs py-2 px-4 rounded-2xl mt-4 bg-sky-500 hover:bg-sky-600"
             // onClick={() => {
             //   setCanvasPreview(
             //     imgRef.current, // HTMLImageElement

@@ -218,7 +218,7 @@ const CategoryEdit = () => {
                 </div>
               </Button>
 
-              <Link to="/service">
+              <Link to="/">
                 <Button className="mr-2 mb-2" color="primary">
                   <div className="flex gap-1">
                     <MdArrowBack className="w-4 h-4" />
