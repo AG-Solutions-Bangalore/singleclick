@@ -1,21 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../layout/Layout";
-import { Link, useNavigate } from "react-router-dom";
-import MUIDataTable from "mui-datatables";
+import { useNavigate } from "react-router-dom";
 import { ContextPanel } from "../../utils/ContextPanel";
-import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { FaWhatsapp } from "react-icons/fa";
+import axios from "axios";
+import MUIDataTable from "mui-datatables";
 import { RiEditLine } from "react-icons/ri";
+import { toast } from "react-toastify";
 
-const MemberList = () => {
-  const [MemberListData, setMemberListData] = useState(null);
+const UserList = () => {
+  const [userListData, setUserListData] = useState(null);
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
   useEffect(() => {
-    const fetchMemberListData = async () => {
+    const fetchUserListData = async () => {
       try {
         if (!isPanelUp) {
           navigate("/maintenance");
@@ -24,7 +23,7 @@ const MemberList = () => {
         setLoading(true);
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `${BASE_URL}/api/panel-fetch-member-list`,
+          `${BASE_URL}/api/panel-fetch-user-list`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -32,39 +31,62 @@ const MemberList = () => {
           }
         );
 
-        setMemberListData(response.data?.user);
+        setUserListData(response.data?.user);
       } catch (error) {
         console.error("Error fetching user list data", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchMemberListData();
+    fetchUserListData();
     setLoading(false);
   }, []);
 
-
-  const whatsApp = (e, value,userName) => {
+  const handleUpdate = async (e, id) => {
     e.preventDefault();
-    
-    const phoneNumber = value;
-    const code='+91'
-    const message = ` Dear ${userName}.
-    \n
-    Thank you for registering with us.
-    \n
-    We received your information but did not find your photo; please share your photo.
-    \n
-    Thanks and regards,\n
-    Govind Garg\n
-    AG Solutions`;
-    const whatsappLink = `https://wa.me/${code}${phoneNumber}?text=${encodeURIComponent(message)}`;
-    
-    window.open(whatsappLink, '_blank');
-    
-}
+    try {
+      if (!isPanelUp) {
+        navigate("/maintenance");
+        return;
+      }
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const res = await axios({
+        url: BASE_URL + "/api/panel-update-user-status/" + id,
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.data.code == "200") {
+        setUserListData((prevUserListData) => {
+          return prevUserListData.map((user) => {
+            if (user.id === id) {
+              const newStatus =
+                user.status === "Active" ? "Inactive" : "Active";
 
-  
+              if (newStatus === "Active") {
+                toast.success("User Activated Successfully");
+              } else {
+                toast.success("User Inactivated Successfully");
+              }
+
+              return { ...user, status: newStatus };
+            }
+            return user;
+          });
+        });
+      } else {
+        toast.error("Errro occur while Inactive the profile");
+      }
+    } catch (error) {
+      console.error("Error fetching user activate data", error);
+      toast.error("Error fetching user activate data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const columns = [
     {
       name: "slNo",
@@ -154,28 +176,12 @@ const MemberList = () => {
       options: {
         filter: false,
         sort: false,
-        customBodyRender: (id, tableMeta) => {
-            const usermobile = MemberListData[tableMeta.rowIndex].mobile;
-            const userName = MemberListData[tableMeta.rowIndex].name;
-            const userphoto = MemberListData[tableMeta.rowIndex].photo;
+        customBodyRender: (id) => {
           return (
             <div className="flex items-center space-x-2">
-                {/* common  */}
-                { !userphoto &&
-                <FaWhatsapp
-                onClick={(e) => whatsApp(e,usermobile,userName)}
-                title="Send WhatsApp Message"
-                className="h-5 w-5 cursor-pointer"
-              />
-            }
-                <RiEditLine
-                    onClick={() => navigate(`/member-edit/${id}`)}
-                    title="Edit Member Info"
-                    className="h-5 w-5 cursor-pointer"
-                  />
-                <MdOutlineRemoveRedEye
-                onClick={() => navigate(`/member-view/${id}`)}
-                title="View Member Info"
+              <RiEditLine
+                onClick={(e) => handleUpdate(e, id)}
+                title="Inactive user"
                 className="h-5 w-5 cursor-pointer"
               />
             </div>
@@ -187,20 +193,17 @@ const MemberList = () => {
   const options = {
     selectableRows: "none",
     elevation: 0,
-  
     responsive: "standard",
     viewColumns: true,
     download: false,
     print: false,
-    
   };
   return (
     <Layout>
-     
       <div className="mt-5">
         <MUIDataTable
-        title={"Member List"}
-          data={MemberListData ? MemberListData : []}
+          title={"User List"}
+          data={userListData ? userListData : []}
           columns={columns}
           options={options}
         />
@@ -209,4 +212,4 @@ const MemberList = () => {
   );
 };
 
-export default MemberList;
+export default UserList;

@@ -47,6 +47,7 @@ const AppProvider = ({ children }) => {
           "/add-subCategory",
           "/add-category",
           "/sub-category-edit",
+          "/user-list"
         ];
         const isAllowedPath = allowedPaths.some((path) =>
           currentPath.startsWith(path)

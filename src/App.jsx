@@ -19,6 +19,7 @@ import SubCategoryAdd from "./pages/master/subCategory/SubCategoryAdd";
 import CategoryAdd from "./pages/master/category/CategoryAdd";
 import CategoryEdit from "./pages/master/category/CategoryEdit";
 import SubCategoryEdit from "./pages/master/subCategory/SubCategoryEdit";
+import UserList from "./pages/user/UserList";
 const App = () => {
   return (
     <>
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="/add-category" element={<CategoryAdd />} />
         <Route path="/category-edit/:id" element={<CategoryEdit />} />
         <Route path="/sub-category-edit/:id" element={<SubCategoryEdit />} />
+        <Route path="/user-list" element={<UserList />} />
 
         {/* <Route
           path="*"

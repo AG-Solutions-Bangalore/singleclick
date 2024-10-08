@@ -124,7 +124,27 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                     color="inherit"
                     className="font-medium capitalize"
                   >
-                    Members
+                    Business
+                  </Typography>
+                </Button>
+              )}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/user-list">
+              {({ isActive }) => (
+                <Button
+                  variant={isActive ? "gradient" : "text"}
+                  color="white"
+                  className="flex items-center gap-4 px-4 capitalize"
+                  fullWidth
+                >
+                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <Typography
+                    color="inherit"
+                    className="font-medium capitalize"
+                  >
+                    Consumer
                   </Typography>
                 </Button>
               )}
@@ -144,32 +164,13 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                     color="inherit"
                     className="font-medium capitalize"
                   >
-                    Master-category
+                    Category
                   </Typography>
                 </Button>
               )}
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/sub-category">
-              {({ isActive }) => (
-                <Button
-                  variant={isActive ? "gradient" : "text"}
-                  color="white"
-                  className="flex items-center gap-4 px-4 capitalize"
-                  fullWidth
-                >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
-                  <Typography
-                    color="inherit"
-                    className="font-medium capitalize"
-                  >
-                    Master-Sub-category
-                  </Typography>
-                </Button>
-              )}
-            </NavLink>
-          </li>
+          
 
           {/* Add more hardcoded routes here as needed */}
         </ul>

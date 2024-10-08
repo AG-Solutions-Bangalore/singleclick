@@ -1,58 +1,47 @@
-import React, { useEffect, useState } from "react";
-import Layout from "../../../layout/Layout";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import BASE_URL from "../../../base/BaseUrl";
 import { toast } from "react-toastify";
-import { Button, Card, Input } from "@material-tailwind/react";
+import { Button, Card, IconButton } from "@material-tailwind/react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { MdArrowBack, MdSend } from "react-icons/md";
-const status = [
-  {
-    value: "Active",
-    label: "Active",
-  },
-  {
-    value: "Inactive",
-    label: "Inactive",
-  },
+import { MdArrowBack, MdEdit, MdSend } from "react-icons/md";
+import Layout from "../../../layout/Layout";
+
+const statusOptions = [
+  { value: "Active", label: "Active" },
+  { value: "Inactive", label: "Inactive" },
 ];
 
-const profile_type = [
-  {
-    value: "0",
-    label: "Business",
-  },
-  {
-    value: "1",
-    label: "Service",
-  },
-  {
-    value: "0,1",
-    label: "Business/Service",
-  },
+const profileOptions = [
+  { value: "0", label: "Business" },
+  { value: "1", label: "Service" },
+  { value: "0,1", label: "Business/Service" },
 ];
+
 const CategoryEdit = () => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [categories, setCategories] = useState({
+  const [categoryData, setCategoryData] = useState({
     category: "",
     category_status: "",
     category_type: "",
     category_image: "",
   });
+  const [subcategories, setSubcategories] = useState([]);
   const { id } = useParams();
+  const fileInputRef = useRef(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const navigate = useNavigate();
 
   const onInputChange = (e) => {
-    setCategories({
-      ...categories,
+    setCategoryData({
+      ...categoryData,
       [e.target.name]: e.target.value,
     });
   };
 
   useEffect(() => {
-    const fetchServiceData = async () => {
+    const fetchCategory = async () => {
       try {
         const response = await axios.get(
           `${BASE_URL}/api/panel-fetch-categories-by-id/${id}`,
@@ -62,165 +51,136 @@ const CategoryEdit = () => {
             },
           }
         );
-        setCategories(response.data.categories);
+        setCategoryData(response.data.categories);
+        setSubcategories(response.data.categoriessub);
       } catch (error) {
-        console.error("Error fetching service:", error);
+        console.error("Error fetching category:", error);
       }
     };
 
-    fetchServiceData();
+    fetchCategory();
   }, [id]);
 
-  const onSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = new FormData();
-    data.append("category", categories.category);
-    data.append("category_type", categories.category_type);
-    data.append("category_status", categories.category_status);
-    data.append("category_image", selectedFile);
+    const formData = new FormData();
+    formData.append("category", categoryData.category);
+    formData.append("category_status", categoryData.category_status);
+    formData.append("category_type", categoryData.category_type);
+    formData.append("category_image", selectedFile);
 
-    const form = document.getElementById("addIndiv");
-    if (form.checkValidity()) {
+    try {
       setIsButtonDisabled(true);
-
-      axios({
-        url: `${BASE_URL}/api/panel-update-categories/${id}?_method=PUT`,
-        method: "POST",
-        data,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-        .then((res) => {
-          if (res.data.code == "200") {
-            toast.success("update succesfull");
-            navigate("/");
-          } else {
-            toast.error("duplicate entry");
-          }
-        })
-        .finally(() => {
-          setIsButtonDisabled(false);
-        });
+      const response = await axios.post(
+        `${BASE_URL}/api/panel-update-categories/${id}?_method=PUT`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (response.data.code == "200") {
+        toast.success("Category updated successfully");
+        navigate("/category");
+      } else {
+        toast.error("Duplicate entry");
+      }
+    } finally {
+      setIsButtonDisabled(false);
     }
   };
 
-  const imageUrl = categories?.category_image
-    ? `https://singleclik.com/api/storage/app/public/categories_images/${categories.category_image}`
+  const imageUrl = categoryData.category_image
+    ? `https://singleclik.com/api/storage/app/public/categories_images/${categoryData.category_image}`
     : "https://singleclik.com/api/storage/app/public/no_image.jpg";
 
   return (
     <Layout>
-      <div className="textfields-wrapper">
-        <div className="my-4 text-2xl font-bold text-gray-800">
-          Edit Category
-        </div>
-        <Card className="p-6 mt-6">
-          <form
-            id="addIndiv"
-            autoComplete="off"
-            onSubmit={onSubmit}
-            className="p-4"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Service Image */}
-              <div className="flex justify-center items-center  rounded-lg shadow-lg shadow-blue-400">
-                <img src={imageUrl} alt="Service" className="w-52 h-52" />
-              </div>
-              {/* Service Fields */}
-              <div className=" rounded-lg shadow-lg shadow-orange-400 p-2 ">
-                <div className="mb-6">
-                  <Input
-                    label="Category Name"
-                    type="text"
-                    name="category"
-                    onChange={(e) => onInputChange(e)}
-                    value={categories.category}
-                    required
-                    labelProps={{
-                      className: "!text-gray-600   ",
-                    }}
-                  />
-                </div>
-                <div className="mb-6">
-                  <FormControl fullWidth>
-                    <InputLabel id="service-select-label">
-                      <span className="text-sm relative bottom-[6px]">
-                        Category Type <span className="text-red-700">*</span>
-                      </span>
-                    </InputLabel>
-                    <Select
-                      sx={{ height: "40px", borderRadius: "5px" }}
-                      labelId="service-select-label"
-                      id="service-select"
-                      name="category_type"
-                      onChange={(e) => onInputChange(e)}
-                      value={categories.category_type}
-                      label="Category Type"
-                      required
-                    >
-                      {profile_type.map((data) => (
-                        <MenuItem key={data.value} value={String(data.value)}>
-                          {data.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </div>
-                <div className="mb-6">
-                  <Input
-                    label="Category Image"
-                    type="file"
-                    name="category_image"
-                    onChange={(e) => setSelectedFile(e.target.files[0])}
-                    className="w-full border border-gray-700 rounded-md"
-                  />
-                </div>
-                <div className="mb-4">
-                  <FormControl fullWidth>
-                    <InputLabel id="service-select-label">
-                      <span className="text-sm relative bottom-[6px]">
-                        Category Status <span className="text-red-700">*</span>
-                      </span>
-                    </InputLabel>
-                    <Select
-                      sx={{ height: "40px", borderRadius: "5px" }}
-                      labelId="service-select-label"
-                      id="service-select"
-                      name="category_status"
-                      onChange={(e) => onInputChange(e)}
-                      value={categories.category_status}
-                      label="Category Status"
-                      required
-                    >
-                      {status.map((data) => (
-                        <MenuItem key={data.label} value={String(data.value)}>
-                          {data.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </div>
-              </div>
-            </div>
-            {/* Buttons */}
-            <div className="text-center mt-6">
-              <Button
-                type="submit"
-                className="mr-2 mb-2"
-                color="primary"
-                disabled={isButtonDisabled}
+      <div className="flex justify-start gap-2 mt-10">
+        <Card className="p-6 w-full max-w-md shadow-lg rounded-lg flex-grow">
+          <div className="text-center">
+            <h2 className="text-2xl border-b border-green-900 font-bold text-gray-800 mb-4">
+              Category Edit
+            </h2>
+          </div>
+          <div className="flex flex-col items-center mb-4">
+            <img
+              src={imageUrl}
+              alt="Category"
+              className="w-32 h-32 rounded-full mb-2"
+            />
+            <div className="absolute top-[160px] right-[170px]">
+              <div
+                className=" border bg-green-400 cursor-pointer hover:bg-blue-300 border-black rounded-full p-[3px] "
+                onClick={() => fileInputRef.current.click()}
               >
+                <MdEdit className="w-6 h-6 text-black" />
+              </div>
+
+              <input
+                type="file"
+                ref={fileInputRef}
+                name="category_image"
+                onChange={(e) => setSelectedFile(e.target.files[0])}
+                style={{ display: "none" }}
+              />
+            </div>
+            {selectedFile && (
+              <p className="text-gray-600 text-sm">{selectedFile.name}</p>
+            )}
+          </div>
+
+          <div className="text-center">
+            <h3 className="text-xl font-semibold">
+              {categoryData.category || "Category Name"}
+            </h3>
+            <span className="text-gray-600">
+              {profileOptions.find(
+                (type) => type.value === categoryData.category_type
+              )?.label || "Category Type"}
+            </span>
+          </div>
+          <form
+            id="categoryForm"
+            autoComplete="off"
+            onSubmit={handleSubmit}
+            className="mt-6"
+          >
+            <div className="mb-4">
+              <FormControl fullWidth>
+                <InputLabel>
+                  <span className="text-sm">
+                    Category Status <span className="text-red-700">*</span>
+                  </span>
+                </InputLabel>
+                <Select
+                  sx={{ height: "40px", borderRadius: "5px" }}
+                  name="category_status"
+                  value={categoryData.category_status}
+                  onChange={onInputChange}
+                  required
+                >
+                  {statusOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+
+            <div className="flex justify-between">
+              <Button type="submit" disabled={isButtonDisabled}>
                 <div className="flex gap-1">
                   <MdSend className="w-4 h-4" />
-                  <span>{isButtonDisabled ? "Updating..." : "Update"}</span>
+                  <span> {isButtonDisabled ? "Updating..." : "Update"}</span>
                 </div>
               </Button>
-
-              <Link to="/">
-                <Button className="mr-2 mb-2" color="primary">
-                  <div className="flex gap-1">
+              <Link to="/category">
+                <Button>
+                  <div className=" flex gap-1">
                     <MdArrowBack className="w-4 h-4" />
                     <span>Back</span>
                   </div>
@@ -228,6 +188,42 @@ const CategoryEdit = () => {
               </Link>
             </div>
           </form>
+        </Card>
+        <Card className="p-6 shadow-lg rounded-lg w-full flex-grow ">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b border-green-900">
+            SubCategory List
+          </h3>
+          <div className="overflow-x-auto custom-scroll">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-green-50">
+                <tr>
+                <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    Sl No
+                  </th>
+                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
+                    Subcategory of {categoryData.category}
+                  </th>
+                 
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {subcategories.map((subcat, index) => (
+                  <tr
+                    key={index}
+                    className="hover:bg-gray-50 transition-colors"
+                  >
+                     <td className="px-4 py-2 text-gray-700">
+                      {index+1}
+                    </td>
+                    <td className="px-4 py-2 text-gray-700">
+                      {subcat.subcategory} 
+                    </td>
+                   
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </Card>
       </div>
     </Layout>

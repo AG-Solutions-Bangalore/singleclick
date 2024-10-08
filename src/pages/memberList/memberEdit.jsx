@@ -38,11 +38,13 @@ const MemberEdit = () => {
     profile_type: "",
     category: "",
     sub_category: "",
+    subcategory:"",
     other_category: "",
     other_sub_category: "",
     whatsapp: "",
     website: "",
     about_us: "",
+    catg_id:"",
     area: "",
     photo: "",
     referred_by_code: "",
@@ -52,6 +54,8 @@ const MemberEdit = () => {
   const [subcategories, setSubCategories] = useState([]);
   const [selectedFile1, setSelectedFile1] = useState(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [selectedSubCategoryValue, setSelectedSubCategoryValue] = useState('');
+
   const avatarUrl = useRef(
     "https://avatarfiles.alphacoders.com/161/161002.jpg"
   );
@@ -62,12 +66,6 @@ const MemberEdit = () => {
   };
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem("id");
-    if (!isLoggedIn) {
-      navigate("/home");
-      return;
-    }
-
     const fetchMemberData = async () => {
       try {
         const response = await axios.get(
@@ -78,14 +76,21 @@ const MemberEdit = () => {
             },
           }
         );
-        setMember(response.data.user);
+        if (response.data.user) {
+          setMember(response.data.user);
+        } else { 
+          toast.error("No user data found");
+          console.error("no user data found")
+          
+          navigate("/member-list");
+        }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
-
+  
     fetchMemberData();
-  }, []);
+  }, [id, navigate]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -110,7 +115,7 @@ const MemberEdit = () => {
   const fetchSubCategories = useCallback(async () => {
     try {
       const response = await axios.get(
-        `${BASE_URL}/api/panel-fetch-sub-categories-by-value/${member.category}`,
+        `${BASE_URL}/api/panel-fetch-sub-categories-by-value/${member?.catg_id || ""}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -121,11 +126,12 @@ const MemberEdit = () => {
     } catch (error) {
       console.error("Error fetching Sub Categories:", error);
     }
-  }, [member.category]);
-
+  }, [member.catg_id]);
   useEffect(() => {
-    fetchSubCategories();
-  }, [member.category]);
+    if (member.catg_id) {
+      fetchSubCategories();
+    }
+  }, [member.catg_id]);
 
   const validateOnlyDigits = (inputtxt) => {
     const phoneno = /^\d+$/;
@@ -141,6 +147,18 @@ const MemberEdit = () => {
       return;
     }
     setMember({ ...member, [name]: value });
+
+    if (name === "category") {
+      setMember({ ...member, catg_id: value, sub_category: "" });
+      setSelectedSubCategoryValue("")
+    }
+    if (name === "sub_category") {
+      const selectedOption = subcategories.find(sub => sub.id === value);
+      if (selectedOption) {
+        setSelectedSubCategoryValue(selectedOption.subcategory); // Store the selected subcategory value
+      }
+    }
+    
   };
 
   const onSubmit = async (e) => {
@@ -153,7 +171,22 @@ const MemberEdit = () => {
     }
     setIsButtonDisabled(true);
     const formData = new FormData();
-    Object.keys(member).forEach((key) => formData.append(key, member[key]));
+    Object.keys(member).forEach((key) => {
+      if (key === "category") {
+        formData.append("category", member.catg_id);
+      } else if (key === "sub_category") {
+        formData.append("sub_category", member.sub_category); // Use the subcategory ID
+      } else if (key === "subcategory") {
+        formData.append("subcategory", selectedSubCategoryValue); // Use the selected subcategory value
+      } else {
+        formData.append(key, member[key]);
+      }
+    });
+      
+      
+
+
+
     if (selectedFile1) formData.append("photo", selectedFile1);
     try {
       const response = await axios.post(
@@ -321,13 +354,13 @@ const MemberEdit = () => {
                   labelId="category-select-label"
                   id="category-select"
                   name="category"
-                  value={member.category}
+                  value={member.catg_id || ""}
                   onChange={(e) => onInputChange(e)}
                   label="Service *"
                   required
                 >
                   {categories.map((categoriesdata, key) => (
-                    <MenuItem key={key} value={categoriesdata.category}>
+                    <MenuItem key={key} value={categoriesdata.id}>
                       {categoriesdata.category}
                     </MenuItem>
                   ))}
@@ -335,7 +368,7 @@ const MemberEdit = () => {
               </FormControl>
             </div>
 
-            {member.category == "Not in List" && (
+            {member.catg_id == "31" && (
               <div>
                 <Input
                   label="Other Category"
@@ -349,7 +382,7 @@ const MemberEdit = () => {
               </div>
             )}
 
-            {member.category == "Not in List" && (
+            {member.catg_id == "31" && (
               <div>
                 <Input
                   label="Other Sub Category"
@@ -362,7 +395,7 @@ const MemberEdit = () => {
                 />
               </div>
             )}
-            {member.category != "Not in List" && (
+            {member.catg_id != "31" && (
               <div>
                 <FormControl fullWidth>
                   <InputLabel id="category-select-label">
@@ -381,7 +414,7 @@ const MemberEdit = () => {
                     required
                   >
                     {subcategories.map((categoriesdata, key) => (
-                      <MenuItem key={key} value={categoriesdata.subcategory}>
+                      <MenuItem key={key} value={categoriesdata.id}>
                         {categoriesdata.subcategory}
                       </MenuItem>
                     ))}
@@ -389,7 +422,7 @@ const MemberEdit = () => {
                 </FormControl>
               </div>
             )}
-            {member.sub_category == "Not in List" && (
+            {member.sub_category == "94" && (
               <div>
                 <Input
                   label="Other Sub Category"

@@ -14,6 +14,7 @@ const MemberView = () => {
   const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchProfileViewData = async () => {
@@ -44,6 +45,50 @@ const MemberView = () => {
     fetchProfileViewData();
     setLoading(false);
   }, []);
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${BASE_URL}/api/panel-fetch-categories`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //           },
+  //         }
+  //       );
+  //       setCategories(response.data.categories);
+  //     } catch (error) {
+  //       console.error("Error fetching Categories:", error);
+  //     }
+  //   };
+
+  //   fetchCategories();
+  // }, []);
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `${BASE_URL}/api/panel-fetch-sub-categories-by-value/${profile.sub_category}`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //           },
+  //         }
+  //       );
+  //       setCategories(response.data.categories);
+  //     } catch (error) {
+  //       console.error("Error fetching Categories:", error);
+  //     }
+  //   };
+
+  //   fetchCategories();
+  // }, []);
+
+
+  // const getCategoryNameById = (id) => {
+  //   const category = categories.find(cat => cat.id === Number(id));
+  //   return category ? category.category : "Unknown Category";
+  // };
 
   useEscapeKey()
   return (
@@ -148,7 +193,7 @@ const MemberView = () => {
                       Sub Category
                       </th>
                       <td className="p-2">:</td>
-                      <td className="p-2">{profile.sub_category}</td>
+                      <td className="p-2">{profile.subcategory}</td>
                     </tr>
                     <tr className="border-b border-black">
                       <th className="text-left p-2 border-r border-black">
