@@ -99,7 +99,7 @@ const CategoryEdit = () => {
   return (
     <Layout>
       <div className="flex justify-start gap-2 mt-10">
-        <Card className="p-6 w-full max-w-md shadow-lg rounded-lg flex-grow">
+        <Card className="p-6 w-full max-w-md shadow-lg rounded-lg ">
           <div className="text-center">
             <h2 className="text-2xl border-b border-green-900 font-bold text-gray-800 mb-4">
               Category Edit
@@ -189,7 +189,7 @@ const CategoryEdit = () => {
             </div>
           </form>
         </Card>
-        <Card className="p-6 shadow-lg rounded-lg w-full flex-grow ">
+        <Card className="p-6 shadow-lg rounded-lg w-full h-[420px] ">
           <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b border-green-900">
             SubCategory List
           </h3>

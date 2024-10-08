@@ -1,12 +1,15 @@
 import Layout from "../../layout/Layout";
 import React, { useRef, useState, useEffect, useContext } from "react";
-import { FaPrint } from "react-icons/fa";
-import { useNavigate, useParams } from "react-router-dom";
+import { FaBackspace, FaPrint } from "react-icons/fa";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ReactToPrint from "react-to-print";
 import { ContextPanel } from "../../utils/ContextPanel";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
 import useEscapeKey from "../../utils/escape/useEscapeKey";
+import { Button } from "@mui/material";
+import { MdArrowBack, MdSend } from "react-icons/md";
+import { IoReturnDownBack } from "react-icons/io5";
 
 const MemberView = () => {
   const componentRef = useRef();
@@ -96,8 +99,12 @@ const MemberView = () => {
       <div className="container mx-auto p-6">
         <div className="w-full bg-white shadow-md rounded-lg p-8">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold border-b  border-blue-700">
-              Profile Details
+            <h1 className="text-2xl font-bold  flex gap-2  border-blue-700">
+
+<Link to="/member-list">
+                  <IoReturnDownBack className="w-8 h-8 hover:text-red-400 border border-blue-500 font-bold rounded-lg p-1 " />
+            </Link>
+              <span>Profile Details</span>
             </h1>
             <ReactToPrint
               trigger={() => (
@@ -230,6 +237,7 @@ const MemberView = () => {
             </div>
         </div>
       </div>
+  
     </Layout>
   );
 };

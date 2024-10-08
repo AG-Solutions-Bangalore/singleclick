@@ -546,7 +546,7 @@ const MemberEdit = () => {
               </div>
             </Button>
 
-            <Link to="/">
+            <Link to="/member-list">
               <Button className="mr-2 mb-2">
                 <div className="flex gap-1">
                   <MdArrowBack className="w-4 h-4" />

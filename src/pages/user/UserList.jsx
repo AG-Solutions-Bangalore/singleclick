@@ -7,6 +7,8 @@ import axios from "axios";
 import MUIDataTable from "mui-datatables";
 import { RiEditLine } from "react-icons/ri";
 import { toast } from "react-toastify";
+import { MdCheckCircle, MdRemoveCircle } from "react-icons/md";
+import ToggleSwitch from "../../components/ToggleSwitch";
 
 const UserList = () => {
   const [userListData, setUserListData] = useState(null);
@@ -176,17 +178,16 @@ const UserList = () => {
       options: {
         filter: false,
         sort: false,
-        customBodyRender: (id) => {
-          return (
-            <div className="flex items-center space-x-2">
-              <RiEditLine
-                onClick={(e) => handleUpdate(e, id)}
-                title="Inactive user"
-                className="h-5 w-5 cursor-pointer"
+        customBodyRender: (id, tableMeta) => {
+            const user = userListData[tableMeta.rowIndex]; 
+            return (
+              <ToggleSwitch
+                isActive={user.status === "Active"}
+                onToggle={(e) => handleUpdate(e, id)}
               />
-            </div>
-          );
-        },
+            );
+          },
+        
       },
     },
   ];
