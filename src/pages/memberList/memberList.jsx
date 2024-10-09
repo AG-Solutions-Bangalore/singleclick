@@ -11,7 +11,10 @@ import { RiEditLine } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { TbStatusChange } from "react-icons/tb";
 
+
+
 const MemberList = () => {
+  
   const [MemberListData, setMemberListData] = useState(null);
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
@@ -234,13 +237,15 @@ const handleChangeToHold = async (e, id) => {
   };
   return (
     <Layout>
+      
      
-      <div className="mt-5">
+      <div className="mt-5 ">
         <MUIDataTable
         title={"Member List"}
           data={MemberListData ? MemberListData : []}
           columns={columns}
           options={options}
+          
         />
       </div>
     </Layout>
