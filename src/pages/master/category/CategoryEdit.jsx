@@ -98,20 +98,20 @@ const CategoryEdit = () => {
 
   return (
     <Layout>
-      <div className="flex justify-start gap-2 mt-10">
+      <div className="flex flex-col lg:flex-row justify-start gap-2 mt-10">
         <Card className="p-6 w-full max-w-md shadow-lg rounded-lg ">
           <div className="text-center">
             <h2 className="text-2xl border-b border-green-900 font-bold text-gray-800 mb-4">
               Category Edit
             </h2>
           </div>
-          <div className="flex flex-col items-center mb-4">
+          <div className=" relative w-44  m-auto flex flex-col items-center mb-4">
             <img
               src={imageUrl}
               alt="Category"
               className="w-32 h-32 rounded-full mb-2"
             />
-            <div className="absolute top-[160px] right-[170px]">
+            <div className="absolute bottom-0 right-0 transform  -translate-x-6 -translate-y-1/2">
               <div
                 className=" border bg-green-400 cursor-pointer hover:bg-blue-300 border-black rounded-full p-[3px] "
                 onClick={() => fileInputRef.current.click()}

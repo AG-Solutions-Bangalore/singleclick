@@ -20,6 +20,17 @@ import CategoryAdd from "./pages/master/category/CategoryAdd";
 import CategoryEdit from "./pages/master/category/CategoryEdit";
 import SubCategoryEdit from "./pages/master/subCategory/SubCategoryEdit";
 import UserList from "./pages/user/UserList";
+import SliderList from "./pages/advSlider/SliderList";
+import PopupSlider from "./pages/popupSlider/PopupSlider";
+import AddSlider from "./pages/advSlider/AddSlider";
+import AddPopupSlider from "./pages/popupSlider/AddPopupSlider";
+import EditSlider from "./pages/advSlider/EditSlider";
+import EditPopupSlider from "./pages/popupSlider/EditPopupSlider";
+import HoldUser from "./pages/holdUser/HoldUser";
+import DeleteUser from "./pages/deleteUser/DeleteUser";
+import ProductList from "./pages/product/ProductList";
+import ProductAdd from "./pages/product/ProductAdd";
+import ProductEdit from "./pages/product/ProductEdit";
 const App = () => {
   return (
     <>
@@ -49,6 +60,17 @@ const App = () => {
         <Route path="/category-edit/:id" element={<CategoryEdit />} />
         <Route path="/sub-category-edit/:id" element={<SubCategoryEdit />} />
         <Route path="/user-list" element={<UserList />} />
+        <Route path="/adv-slider" element={<SliderList />} />
+        <Route path="/popup-slider" element={<PopupSlider />} />
+        <Route path="/add-slider" element={<AddSlider />} />
+        <Route path="/slider-edit/:id" element={<EditSlider />} />
+        <Route path="/add-popup-slider" element={<AddPopupSlider />} />
+        <Route path="/popup-slider-edit/:id" element={<EditPopupSlider />} />
+        <Route path="/hold-user" element={<HoldUser />} />
+        <Route path="/delete-user" element={<DeleteUser />} />
+        <Route path="/product" element={<ProductList />} />
+        <Route path="/add-product" element={<ProductAdd />} />
+        <Route path="/edit-product/:id" element={<ProductEdit />} />
 
         {/* <Route
           path="*"

@@ -5,9 +5,11 @@ import MUIDataTable from "mui-datatables";
 import { ContextPanel } from "../../utils/ContextPanel";
 import axios from "axios";
 import BASE_URL from "../../base/BaseUrl";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { MdDeleteOutline, MdOutlineRemoveRedEye } from "react-icons/md";
 import { FaWhatsapp } from "react-icons/fa";
 import { RiEditLine } from "react-icons/ri";
+import { toast } from "react-toastify";
+import { TbStatusChange } from "react-icons/tb";
 
 const MemberList = () => {
   const [MemberListData, setMemberListData] = useState(null);
@@ -63,6 +65,39 @@ const MemberList = () => {
     window.open(whatsappLink, '_blank');
     
 }
+
+const handleChangeToHold = async (e, id) => {
+  e.preventDefault();
+  try {
+    if (!isPanelUp) {
+      navigate("/maintenance");
+      return;
+    }
+    setLoading(true);
+    const token = localStorage.getItem("token");
+    const res = await axios({
+      url: BASE_URL + "/api/panel-convert-business-consumer/" + id, 
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (res.data.code == "200") {
+      toast.success("Member Hold  succesfully")
+      setMemberListData((prevMemberListData) => 
+        prevMemberListData.filter((member) => member.id !== id && member.status === member.status)
+      );
+     
+    } else {
+      toast.error("Member Cannot be Hold");
+    }
+  } catch (error) {
+    console.error("Error Meber hol data", error);
+    toast.error("Error member hold data");
+  } finally {
+    setLoading(false);
+  }
+};
 
   
   const columns = [
@@ -178,6 +213,9 @@ const MemberList = () => {
                 title="View Member Info"
                 className="h-5 w-5 cursor-pointer"
               />
+              <TbStatusChange
+              onClick={(e)=>handleChangeToHold(e,id)}
+              title="Hold" className="w-6 h-6 text-red-700 cursor-pointer" />
             </div>
           );
         },

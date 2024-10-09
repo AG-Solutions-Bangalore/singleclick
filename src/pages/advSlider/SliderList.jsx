@@ -8,13 +8,11 @@ import { RiEditLine } from 'react-icons/ri';
 import MUIDataTable from "mui-datatables";
 
 const SliderList = () => {
-    const [sliderListData, setSliderListData] = useState([]);
+    const [sliderListData, setSliderListData] = useState(null);
     const [loading, setLoading] = useState(false);
     const { isPanelUp } = useContext(ContextPanel);
     const navigate = useNavigate();
-    const [page, setPage] = useState(0);
-    const [rowsPerPage] = useState(2);
-
+    
     useEffect(() => {
       const fetchSliderListData = async () => {
         try {
@@ -33,7 +31,7 @@ const SliderList = () => {
             }
           );
   
-          setSliderListData(response.data?.slider || []);
+          setSliderListData(response.data?.slider);
         } catch (error) {
           console.error("Error fetching slider list data", error);
         } finally {
@@ -41,20 +39,21 @@ const SliderList = () => {
         }
       };
       fetchSliderListData();
-    }, [isPanelUp, navigate]);
+      setLoading(false);
+    }, []);
   
     const columns = [
-        {
-            name: "slNo",
-            label: "SL No",
-            options: {
-                filter: false,
-                sort: false,
-                customBodyRender: (value, tableMeta) => {
-                    return tableMeta.rowIndex + 1 + page * rowsPerPage;
-                },
-            },
+      {
+        name: "slNo",
+        label: "SL No",
+        options: {
+          filter: false,
+          sort: false,
+          customBodyRender: (value, tableMeta) => {
+            return tableMeta.rowIndex + 1;
+          },
         },
+      },
       {
         name: "slider_images",
         label: "IMAGE",
@@ -91,6 +90,7 @@ const SliderList = () => {
           sort: false,
         },
       },
+  
       {
         name: "id",
         label: "ACTION",
@@ -111,48 +111,38 @@ const SliderList = () => {
         },
       },
     ];
-
     const options = {
       selectableRows: "none",
       elevation: 0,
+ 
       responsive: "standard",
       viewColumns: true,
       download: false,
       print: false,
-      rowsPerPage: rowsPerPage,
-      rowsPerPageOptions: [2],
-      count: sliderListData.length,
-      page: page,
-      onChangePage: (newPage) => setPage(newPage),
-      serverSide: false,
+      
     };
-
-    return (
-     <Layout>
-         <div className="flex flex-col md:flex-row justify-between items-center bg-white mt-5 p-2 rounded-lg space-y-4 md:space-y-0">
-          <h3 className="text-center md:text-left text-lg md:text-xl font-bold">
-            Adv Slider List
-          </h3>
-          <Link
-            to="/add-slider"
-            className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
-          >
-            + Add Slider
-          </Link>
-        </div>
-        <div className="mt-5">
-          {loading ? (
-            <p>Loading...</p>
-          ) : (
-            <MUIDataTable
-              data={sliderListData.slice(page * rowsPerPage, (page + 1) * rowsPerPage)}
-              columns={columns}
-              options={options}
-            />
-          )}
-        </div>
-     </Layout>
-    )
+  return (
+   <Layout>
+       <div className="flex flex-col md:flex-row justify-between items-center bg-white mt-5 p-2 rounded-lg space-y-4 md:space-y-0">
+        <h3 className="text-center md:text-left text-lg md:text-xl font-bold">
+          Adv Slider List
+        </h3>
+        <Link
+          to="/add-slider"
+          className="btn btn-primary text-center md:text-right text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg shadow-md"
+        >
+          + Add Slider
+        </Link>
+      </div>
+      <div className="mt-5">
+        <MUIDataTable
+          data={sliderListData ? sliderListData : []}
+          columns={columns}
+          options={options}
+        />
+      </div>
+   </Layout>
+  )
 }
 
 export default SliderList

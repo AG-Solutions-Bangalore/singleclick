@@ -119,7 +119,7 @@ const CategoryList = () => {
             <div className="flex items-center space-x-2">
               <RiEditLine
                 onClick={() => navigate(`/category-edit/${id}`)}
-                title="Edit Member Info"
+                title="Edit Category Info"
                 className="h-5 w-5 cursor-pointer"
               />
             </div>
@@ -131,19 +131,11 @@ const CategoryList = () => {
   const options = {
     selectableRows: "none",
     elevation: 0,
-    rowsPerPage: 5,
-    rowsPerPageOptions: [5, 10, 25],
     responsive: "standard",
     viewColumns: true,
     download: false,
     print: false,
-    setRowProps: (rowData) => {
-      return {
-        style: {
-          borderBottom: "10px solid #f1f7f9",
-        },
-      };
-    },
+    
   };
   return (
     <Layout>

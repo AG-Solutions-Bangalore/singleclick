@@ -47,7 +47,19 @@ const AppProvider = ({ children }) => {
           "/add-subCategory",
           "/add-category",
           "/sub-category-edit",
-          "/user-list"
+          "/user-list",
+          "/adv-slider",
+          "/add-slider",
+          "/slider-edit",
+          "/popup-slider",
+          "/add-popup-slider",
+          "/popup-slider-edit",
+          "/hold-user",
+          "/delete-user",
+          "/product",
+          "/add-product",
+          "/edit-product"
+
         ];
         const isAllowedPath = allowedPaths.some((path) =>
           currentPath.startsWith(path)
@@ -73,7 +85,7 @@ const AppProvider = ({ children }) => {
 
   useEffect(() => {
     checkPanelStatus();
-    const intervalId = setInterval(checkPanelStatus, 6000);
+    const intervalId = setInterval(checkPanelStatus, 60000);
     return () => clearInterval(intervalId);
   }, []);
 

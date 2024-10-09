@@ -65,7 +65,7 @@ const CategoryAdd = () => {
           category_type: "",
           category_image: "",
         });
-        navigate("/");
+        navigate("/category");
       } else {
         toast.error("duplicate entry");
       }

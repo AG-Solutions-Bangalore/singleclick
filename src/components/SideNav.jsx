@@ -10,9 +10,15 @@ import {
   Typography,
   Collapse,
 } from "@material-tailwind/react";
+import { TbStackPop } from "react-icons/tb";
+import { CgProductHunt } from "react-icons/cg";
+import { TbCategory2 } from "react-icons/tb";
+import { TfiLayoutSlider } from "react-icons/tfi";
+import { PiCardholderLight } from "react-icons/pi";
+import { FiUsers } from "react-icons/fi";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import { MdOutlineAdd, MdToday } from "react-icons/md";
+import { MdOutlineAdd, MdOutlineBusinessCenter, MdOutlineDelete, MdOutlineSpaceDashboard, MdToday } from "react-icons/md";
 const SideNav = ({ openSideNav, setOpenSideNav }) => {
   const sidenavRef = useRef(null);
   const { pathname } = useLocation();
@@ -89,7 +95,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
         </IconButton>
       </div>
       <div className="m-4">
-        <ul className="mb-4 flex flex-col gap-1">
+        <ul className="mb-4  overflow-y-auto lg:h-[calc(100vh-150px)]  md:h-[calc(100vh-200px)] h-[calc(100vh-200px)] custom-scroll">
           <li>
             <NavLink to="/home">
               {({ isActive }) => (
@@ -99,7 +105,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <MdOutlineSpaceDashboard className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
@@ -119,12 +125,12 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <MdOutlineBusinessCenter className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
                   >
-                    Business
+                    Businesses
                   </Typography>
                 </Button>
               )}
@@ -139,12 +145,12 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <FiUsers className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
                   >
-                    Consumer
+                    Consumers
                   </Typography>
                 </Button>
               )}
@@ -159,12 +165,112 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                   className="flex items-center gap-4 px-4 capitalize"
                   fullWidth
                 >
-                  <HomeIcon className="w-5 h-5 text-inherit" />
+                  <TbCategory2 className="w-5 h-5 text-inherit" />
                   <Typography
                     color="inherit"
                     className="font-medium capitalize"
                   >
                     Category
+                  </Typography>
+                </Button>
+              )}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/adv-slider">
+              {({ isActive }) => (
+                <Button
+                  variant={isActive ? "gradient" : "text"}
+                  color="white"
+                  className="flex items-center gap-4 px-4 capitalize"
+                  fullWidth
+                >
+                  <TfiLayoutSlider className="w-5 h-5 text-inherit" />
+                  <Typography
+                    color="inherit"
+                    className="font-medium capitalize"
+                  >
+                    Adv Slider
+                  </Typography>
+                </Button>
+              )}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/popup-slider">
+              {({ isActive }) => (
+                <Button
+                  variant={isActive ? "gradient" : "text"}
+                  color="white"
+                  className="flex items-center gap-4 px-4 capitalize"
+                  fullWidth
+                >
+                  <TbStackPop className="w-5 h-5 text-inherit" />
+                  <Typography
+                    color="inherit"
+                    className="font-medium capitalize"
+                  >
+                    Pop up Slider
+                  </Typography>
+                </Button>
+              )}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/hold-user">
+              {({ isActive }) => (
+                <Button
+                  variant={isActive ? "gradient" : "text"}
+                  color="white"
+                  className="flex items-center gap-4 px-4 capitalize"
+                  fullWidth
+                >
+                  <PiCardholderLight className="w-5 h-5 text-inherit" />
+                  <Typography
+                    color="inherit"
+                    className="font-medium capitalize"
+                  >
+                    Hold User
+                  </Typography>
+                </Button>
+              )}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/delete-user">
+              {({ isActive }) => (
+                <Button
+                  variant={isActive ? "gradient" : "text"}
+                  color="white"
+                  className="flex items-center gap-4 px-4 capitalize"
+                  fullWidth
+                >
+                  <MdOutlineDelete className="w-5 h-5 text-inherit" />
+                  <Typography
+                    color="inherit"
+                    className="font-medium capitalize"
+                  >
+                   Delete User
+                  </Typography>
+                </Button>
+              )}
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/product">
+              {({ isActive }) => (
+                <Button
+                  variant={isActive ? "gradient" : "text"}
+                  color="white"
+                  className="flex items-center gap-4 px-4 capitalize"
+                  fullWidth
+                >
+                  <CgProductHunt className="w-5 h-5 text-inherit" />
+                  <Typography
+                    color="inherit"
+                    className="font-medium capitalize"
+                  >
+                   Products
                   </Typography>
                 </Button>
               )}

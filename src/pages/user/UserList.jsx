@@ -7,8 +7,9 @@ import axios from "axios";
 import MUIDataTable from "mui-datatables";
 import { RiEditLine } from "react-icons/ri";
 import { toast } from "react-toastify";
-import { MdCheckCircle, MdRemoveCircle } from "react-icons/md";
+import { MdCheckCircle, MdDeleteOutline, MdRemoveCircle } from "react-icons/md";
 import ToggleSwitch from "../../components/ToggleSwitch";
+
 
 const UserList = () => {
   const [userListData, setUserListData] = useState(null);
@@ -84,6 +85,40 @@ const UserList = () => {
     } catch (error) {
       console.error("Error fetching user activate data", error);
       toast.error("Error fetching user activate data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const handleDelete = async (e, id) => {
+    e.preventDefault();
+    try {
+      if (!isPanelUp) {
+        navigate("/maintenance");
+        return;
+      }
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const res = await axios({
+        url: BASE_URL + "/api/panel-delete-users/" + id, 
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.data.code == "200") {
+        toast.success("User Deleted  succesfully")
+        setUserListData((prevUserListData) => 
+          prevUserListData.filter((user) => user.id !== id && user.status === user.status)
+        );
+       
+      } else {
+        toast.error("Errro occur while delete the user profile");
+      }
+    } catch (error) {
+      console.error("Error user delete data", error);
+      toast.error("Error user delete data");
     } finally {
       setLoading(false);
     }
@@ -179,15 +214,19 @@ const UserList = () => {
         filter: false,
         sort: false,
         customBodyRender: (id, tableMeta) => {
-            const user = userListData[tableMeta.rowIndex]; 
-            return (
+          const user = userListData[tableMeta.rowIndex];
+          return (
+            <div className="flex">
               <ToggleSwitch
                 isActive={user.status === "Active"}
                 onToggle={(e) => handleUpdate(e, id)}
               />
-            );
-          },
-        
+              <MdDeleteOutline
+              onClick={(e)=>handleDelete(e,id)}
+              title="Delete the user" className="w-6 h-6 text-red-700 cursor-pointer" />
+            </div>
+          );
+        },
       },
     },
   ];

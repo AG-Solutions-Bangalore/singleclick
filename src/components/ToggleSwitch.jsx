@@ -13,9 +13,9 @@ const ToggleSwitch = ({ isActive, onToggle }) => {
           onChange={onToggle}
         />
       
-        <div className={`block ${isActive ? "bg-green-500" : "bg-red-500"} w-10 h-6 rounded-full transition`}></div>
+        <div className={`block ${isActive ? "bg-green-500" : "bg-red-500"} w-8 h-5 rounded-full transition`}></div>
         <div
-          className={`dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform ${
+          className={`dot absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${
             isActive ? "translate-x-full" : ""
           }`}
         ></div>

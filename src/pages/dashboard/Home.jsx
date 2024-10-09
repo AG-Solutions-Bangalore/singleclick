@@ -61,13 +61,13 @@ const Home = () => {
       },
     },
   };
-const handleNavigate = () => {
-  navigate('/category')
-}
+// const handleNavigate = () => {
+//   navigate(`/category/${}`)
+// }
   return (
     <Layout>
       <motion.div
-        className="mt-12 p-8  grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-10 gap-6"
+        className="mt-6 p-4  grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-10 gap-6"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
@@ -75,7 +75,7 @@ const handleNavigate = () => {
         {categoriesData.map((item, index) => (
           <motion.div
             key={index}
-            onClick={handleNavigate}
+            onClick={()=>navigate(`/category-edit/${item.id}`)}
             className="relative p-1 cursor-pointer  bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-xl overflow-hidden shadow-lg border border-white border-opacity-20"
             variants={itemVariants}
             whileHover={{ 
