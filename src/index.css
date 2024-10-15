@@ -24,6 +24,31 @@
     scrollbar-color: #900002 transparent; 
   }
 
+
+
+
+  /* // for category edit  */
+
+  .custom-scro::-webkit-scrollbar {
+    width: 4px; 
+    background-color: #fbf6f6; 
+  }
+  
+  .custom-scro::-webkit-scrollbar-thumb {
+    background-color: #fbf6f6; 
+    border-radius: 10px; 
+  }
+  
+  .custom-scro::-webkit-scrollbar-thumb:hover {
+    background-color: #fbf6f6; 
+  }
+  
+  /* work on firebox browser */
+  .custom-scro {
+    scrollbar-width: thin; 
+    scrollbar-color: #fbf6f6 transparent; 
+  }
+
  
 
 

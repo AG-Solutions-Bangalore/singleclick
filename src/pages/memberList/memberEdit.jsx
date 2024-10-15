@@ -56,6 +56,10 @@ const MemberEdit = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [selectedSubCategoryValue, setSelectedSubCategoryValue] = useState('');
 
+  // for pagination 
+  const storedPageNo = localStorage.getItem("page-no");
+  const pageNo = storedPageNo === "null" || storedPageNo === null ? "1" : storedPageNo;
+  //
   const avatarUrl = useRef(
     "https://avatarfiles.alphacoders.com/161/161002.jpg"
   );
@@ -161,6 +165,11 @@ const MemberEdit = () => {
     
   };
 
+  const handleBack = (e) => {
+    e.preventDefault();
+    navigate(`/member-list?page=${pageNo}`);
+  };
+
   const onSubmit = async (e) => {
     e.preventDefault();
 
@@ -202,7 +211,7 @@ const MemberEdit = () => {
 
       if (response.data.code == "200") {
         toast.success("update succesfull");
-        navigate("/member-list");
+        navigate(`/member-list?page=${pageNo}`);
       } else {
         if (response.data.code == "401") {
           toast.error("Mobile No Duplicate Entry");
@@ -546,14 +555,14 @@ const MemberEdit = () => {
               </div>
             </Button>
 
-            <Link to="/member-list">
-              <Button className="mr-2 mb-2">
+            
+              <Button onClick={handleBack} className="mr-2 mb-2">
                 <div className="flex gap-1">
                   <MdArrowBack className="w-4 h-4" />
                   <span>Back</span>
                 </div>
               </Button>
-            </Link>
+            
           </div>
         </form>
       </div>

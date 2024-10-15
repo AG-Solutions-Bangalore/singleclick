@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import Layout from "../../layout/Layout";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import MUIDataTable from "mui-datatables";
 import { ContextPanel } from "../../utils/ContextPanel";
 import axios from "axios";
@@ -10,6 +10,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { RiEditLine } from "react-icons/ri";
 import { toast } from "react-toastify";
 import { TbStatusChange } from "react-icons/tb";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 
 
@@ -19,6 +20,26 @@ const MemberList = () => {
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
   const navigate = useNavigate();
+  const location = useLocation();
+    const [page, setPage] = useState(0);
+    const rowsPerPage = 10;
+    const totalSliders = MemberListData?.total_count
+    const searchParams = new URLSearchParams(location.search);
+    const pageParam = searchParams.get('page');
+    useEffect(() => {
+      if (pageParam) {
+        setPage(parseInt(pageParam) - 1);
+      }else{
+        const storedPageNo = localStorage.getItem("page-no");
+        if (storedPageNo) {
+          setPage(parseInt(storedPageNo) - 1);
+          navigate(`/member-list?page=${storedPageNo}`); // Update the URL with stored page-no
+        }else{
+          localStorage.setItem("page-no", 1)
+          setPage(0)
+        }
+      }
+    }, [location]);
   useEffect(() => {
     const fetchMemberListData = async () => {
       try {
@@ -37,7 +58,7 @@ const MemberList = () => {
           }
         );
 
-        setMemberListData(response.data?.user);
+        setMemberListData(response.data?.user );
       } catch (error) {
         console.error("Error fetching user list data", error);
       } finally {
@@ -102,6 +123,12 @@ const handleChangeToHold = async (e, id) => {
   }
 };
 
+
+const handleEdit = (e,id)=>{
+  e.preventDefault()
+  localStorage.setItem("page-no",pageParam)
+  navigate(`/member-edit/${id}`)
+}
   
   const columns = [
     {
@@ -207,7 +234,7 @@ const handleChangeToHold = async (e, id) => {
               />
             }
                 <RiEditLine
-                    onClick={() => navigate(`/member-edit/${id}`)}
+                    onClick={(e) => handleEdit(e,id)}
                     title="Edit Member Info"
                     className="h-5 w-5 cursor-pointer"
                   />
@@ -233,6 +260,33 @@ const handleChangeToHold = async (e, id) => {
     viewColumns: true,
     download: false,
     print: false,
+    count: totalSliders,
+      rowsPerPage: rowsPerPage,
+      page: page,
+      onChangePage: (currentPage) => {
+        setPage(currentPage);
+        navigate(`/member-list?page=${currentPage + 1}`);
+      },
+      customFooter: (count, page, rowsPerPage, changeRowsPerPage, changePage) => {
+        return (
+          <div className="flex justify-end items-center p-4">
+           
+           <span className="mx-4">
+            <span className='text-red-600'>{page + 1}</span>-{rowsPerPage} of {Math.ceil(count / rowsPerPage)}
+            </span>
+              <IoIosArrowBack 
+                  onClick={page === 0 ? null : () => changePage(page - 1)}
+              
+              className={`w-6 h-6 cursor-pointer ${page === 0 ? 'text-gray-400 cursor-not-allowed' : 'text-blue-600'}  hover:text-red-600`}
+              />
+              <IoIosArrowForward
+             onClick={page >= Math.ceil(count / rowsPerPage) - 1 ? null : () => changePage(page + 1)}
+               className={`w-6 h-6 cursor-pointer ${page >= Math.ceil(count / rowsPerPage) - 1 ?'text-gray-400 cursor-not-allowed' : 'text-blue-600'}  hover:text-red-600`}
+              />
+            
+          </div>
+        );
+      },
     
   };
   return (

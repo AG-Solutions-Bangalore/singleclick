@@ -23,6 +23,15 @@ const SliderList = () => {
     useEffect(() => {
       if (pageParam) {
         setPage(parseInt(pageParam) - 1);
+      }else{
+        const storedPageNo = localStorage.getItem("page-no");
+        if (storedPageNo) {
+          setPage(parseInt(storedPageNo) - 1);
+          navigate(`/adv-slider?page=${storedPageNo}`); // Update the URL with stored page-no
+        }else{
+          localStorage.setItem("page-no", 1)
+          setPage(0)
+        }
       }
     }, [location]);
     

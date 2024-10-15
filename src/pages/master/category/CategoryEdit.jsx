@@ -10,6 +10,7 @@ import Layout from "../../../layout/Layout";
 import { CiEdit } from "react-icons/ci";
 import { RiArrowUpDoubleFill } from "react-icons/ri";
 import { p } from "framer-motion/client";
+import SubCategoryEditList from "../../../components/categoryEdit/SubCategoryEditList";
 
 const statusOptions = [
   { value: "Active", label: "Active" },
@@ -32,14 +33,10 @@ const CategoryEdit = () => {
     category_sort: "",
   });
   const [categoryUser, setCategoryUser] = useState([]);
-  const [subcategories, setSubcategories] = useState([]);
   const { id } = useParams();
   const fileInputRef = useRef(null);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  // subcategory edit
-  const [editIndex, setEditIndex] = useState(null);
-  const [editedSubcategories, setEditedSubcategories] = useState([]);
-  //
+ 
   const navigate = useNavigate();
 
   const onInputChange = (e) => {
@@ -61,8 +58,6 @@ const CategoryEdit = () => {
           }
         );
         setCategoryData(response.data.categories);
-        setSubcategories(response.data.categoriessub);
-        setEditedSubcategories(response.data.categoriessub); // for edit show
         setCategoryUser(response.data.user); // for user list of particular category
       } catch (error) {
         console.error("Error fetching category edit:", error);
@@ -104,23 +99,8 @@ const CategoryEdit = () => {
     }
   };
 
-  //subcategory edit
 
-  const handleEditClick = (index) => {
-    setEditIndex(index);
-  };
-
-  const handleUpdateClick = (index) => {
-    setEditIndex(null);
-  };
-
-  const handleChange = (index, value) => {
-    const updatedSubcategories = [...editedSubcategories];
-    updatedSubcategories[index].subcategory = value;
-    setEditedSubcategories(updatedSubcategories);
-  };
-
-  //
+  
 
   const imageUrl = categoryData.category_image
     ? `https://singleclik.com/api/storage/app/public/categories_images/${categoryData.category_image}`
@@ -278,14 +258,19 @@ const CategoryEdit = () => {
       </div>
       <div className="flex flex-col lg:flex-row mt-2 gap-2">
         <Card className="p-6 w-full lg:max-w-md h-[420px] shadow-lg rounded-lg overflow-hidden bg-white">
-          <div className="h-full overflow-y-auto custom-scroll ">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b border-green-900">
+            User List
+          </h3>
+          <div className="h-full overflow-y-auto custom-scro">
             {categoryUser.length === 0 ? (
-              <p className="text-center text-gray-500">No users available</p>
+              <p className="text-center text-gray-400 italic">
+                No users available
+              </p>
             ) : (
               categoryUser.map((item, index) => (
                 <div
                   key={index}
-                  className="flex flex-row items-center justify-start gap-5 mb-4 border-b border-dashed border-orange-200"
+                  className="flex flex-row items-center  gap-4 mb-4 border-b border-dashed border-gray-200 pb-2"
                 >
                   <img
                     src={
@@ -293,10 +278,10 @@ const CategoryEdit = () => {
                         ? `https://singleclik.com/api/storage/app/public/user_images/${item.photo}`
                         : "https://singleclik.com/api/storage/app/public/no_image.jpg"
                     }
-                    alt="photo"
-                    className="w-10 h-10 rounded-full border-2 border-gray-300 shadow-md"
+                    alt="User photo"
+                    className="w-12 h-12  rounded-full border-r-2 border-blue-700 shadow-sm"
                   />
-                  <p className="text-lg font-semibold text-gray-700">
+                  <p className="text-sm  font-semibold text-gray-800">
                     {item.name}
                   </p>
                 </div>
@@ -304,69 +289,10 @@ const CategoryEdit = () => {
             )}
           </div>
         </Card>
-
+           
         {/* h-420px  */}
-        <Card className="p-6 shadow-lg rounded-lg w-full h-[420px] ">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4 border-b border-green-900">
-            SubCategory List
-          </h3>
-          <div className="overflow-x-auto custom-scroll">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-green-50">
-                <tr>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Sl No
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Subcategory of {categoryData.category}
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Status
-                  </th>
-                  <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {subcategories.map((subcat, index) => (
-                  <tr key={index} className="hover:bg-red-50 transition-colors">
-                    <td className="px-4 py-2 text-gray-700">{index + 1}</td>
-
-                    <td className="px-4 py-2 text-gray-700">
-                      {editIndex === index ? (
-                        <input
-                          type="text"
-                          value={editedSubcategories[index].subcategory}
-                          onChange={(e) => handleChange(index, e.target.value)}
-                          className="border border-gray-300 rounded px-2 py-1"
-                        />
-                      ) : (
-                        subcat.subcategory
-                      )}
-                    </td>
-                    <td className="px-4 py-2 text-gray-700">
-                      {subcat.subcategory_status}
-                    </td>
-                    <td className="px-4 py-2 text-gray-700">
-                      {editIndex === index ? (
-                        <RiArrowUpDoubleFill
-                          className="w-5 h-5 hover:text-green-800 cursor-pointer text-green-800"
-                          onClick={() => handleUpdateClick(index)}
-                        />
-                      ) : (
-                        <CiEdit
-                          className="w-5 h-5 hover:text-red-800 cursor-pointer text-green-800"
-                          onClick={() => handleEditClick(index)}
-                        />
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+       
+        <SubCategoryEditList/>
       </div>
     </Layout>
   );

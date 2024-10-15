@@ -77,6 +77,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
       label: "Category",
       Icon: TbCategory2,
     },
+   
     {
       to: "/adv-slider",
       label: "Adv Slider",
@@ -117,6 +118,11 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
   const handleBookingButtonClick = () => {
     // Toggle the booking menu open/close
     setOpenBookingMenu((prevState) => !prevState);
+  };
+
+  const handleItemClick = () => {
+    // Clear page-no from localStorage
+    localStorage.removeItem("page-no");
   };
   return (
     <aside
@@ -159,7 +165,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
    
       {sideItems.map(({ to, label, Icon }, index) => (
         <li key={index}>
-          <NavLink to={to}>
+          <NavLink to={to} onClick={handleItemClick}>
             {({ isActive }) => (
               <Button
                 variant={isActive ? "gradient" : "text"}
