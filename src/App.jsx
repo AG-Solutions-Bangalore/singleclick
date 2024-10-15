@@ -31,6 +31,10 @@ import DeleteUser from "./pages/deleteUser/DeleteUser";
 import ProductList from "./pages/product/ProductList";
 import ProductAdd from "./pages/product/ProductAdd";
 import ProductEdit from "./pages/product/ProductEdit";
+import FeedbackList from "./pages/feedback/FeedbackList";
+import NotificationList from "./pages/notification/NotificationList";
+import AddNotification from "./pages/notification/AddNotification";
+import EditNotification from "./pages/notification/EditNotification";
 const App = () => {
   return (
     <>
@@ -71,6 +75,10 @@ const App = () => {
         <Route path="/product" element={<ProductList />} />
         <Route path="/add-product" element={<ProductAdd />} />
         <Route path="/edit-product/:id" element={<ProductEdit />} />
+        <Route path="/feedback" element={<FeedbackList />} />
+        <Route path="/notification" element={<NotificationList />} />
+        <Route path="/add-notification" element={<AddNotification />} />
+        <Route path="/edit-notification/:id" element={<EditNotification />} />
 
         {/* <Route
           path="*"

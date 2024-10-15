@@ -58,7 +58,11 @@ const AppProvider = ({ children }) => {
           "/delete-user",
           "/product",
           "/add-product",
-          "/edit-product"
+          "/edit-product",
+          "/feedback",
+          "/notification",
+          "/add-notification",
+          "/edit-notification"
 
         ];
         const isAllowedPath = allowedPaths.some((path) =>

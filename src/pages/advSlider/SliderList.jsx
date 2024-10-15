@@ -1,17 +1,30 @@
 import React, { useContext, useEffect, useState } from 'react'
 import Layout from '../../layout/Layout'
 import { ContextPanel } from '../../utils/ContextPanel';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import BASE_URL from '../../base/BaseUrl';
 import { RiEditLine } from 'react-icons/ri';
 import MUIDataTable from "mui-datatables";
+import { IoIosArrowBack, IoIosArrowDropright, IoIosArrowForward } from 'react-icons/io';
 
 const SliderList = () => {
-    const [sliderListData, setSliderListData] = useState(null);
+    const [sliderListData, setSliderListData] = useState([]);
     const [loading, setLoading] = useState(false);
     const { isPanelUp } = useContext(ContextPanel);
     const navigate = useNavigate();
+    const location = useLocation();
+    
+    const [page, setPage] = useState(0);
+    const rowsPerPage = 2;
+    const totalSliders = sliderListData?.total_slider
+    const searchParams = new URLSearchParams(location.search);
+    const pageParam = searchParams.get('page');
+    useEffect(() => {
+      if (pageParam) {
+        setPage(parseInt(pageParam) - 1);
+      }
+    }, [location]);
     
     useEffect(() => {
       const fetchSliderListData = async () => {
@@ -31,7 +44,7 @@ const SliderList = () => {
             }
           );
   
-          setSliderListData(response.data?.slider);
+          setSliderListData(response.data?.slider || []);
         } catch (error) {
           console.error("Error fetching slider list data", error);
         } finally {
@@ -41,6 +54,13 @@ const SliderList = () => {
       fetchSliderListData();
       setLoading(false);
     }, []);
+
+
+    const handleEdit = (e,id)=>{
+      e.preventDefault()
+      localStorage.setItem("page-no",pageParam)
+      navigate(`/slider-edit/${id}`)
+    }
   
     const columns = [
       {
@@ -50,7 +70,7 @@ const SliderList = () => {
           filter: false,
           sort: false,
           customBodyRender: (value, tableMeta) => {
-            return tableMeta.rowIndex + 1;
+            return page * rowsPerPage + tableMeta.rowIndex + 1;
           },
         },
       },
@@ -101,7 +121,7 @@ const SliderList = () => {
             return (
               <div className="flex items-center space-x-2">
                 <RiEditLine
-                  onClick={() => navigate(`/slider-edit/${id}`)}
+                  onClick={(e) => handleEdit(e,id)}
                   title="Edit Slider Info"
                   className="h-5 w-5 cursor-pointer"
                 />
@@ -119,6 +139,33 @@ const SliderList = () => {
       viewColumns: true,
       download: false,
       print: false,
+      count: totalSliders,
+      rowsPerPage: rowsPerPage,
+      page: page,
+      onChangePage: (currentPage) => {
+        setPage(currentPage);
+        navigate(`/adv-slider?page=${currentPage + 1}`);
+      },
+      customFooter: (count, page, rowsPerPage, changeRowsPerPage, changePage) => {
+        return (
+          <div className="flex justify-end items-center p-4">
+           
+           <span className="mx-4">
+            <span className='text-red-600'>{page + 1}</span>-{rowsPerPage} of {Math.ceil(count / rowsPerPage)}
+            </span>
+              <IoIosArrowBack 
+                  onClick={page === 0 ? null : () => changePage(page - 1)}
+              
+              className={`w-6 h-6 cursor-pointer ${page === 0 ? 'text-gray-400 cursor-not-allowed' : 'text-blue-600'}  hover:text-red-600`}
+              />
+              <IoIosArrowForward
+             onClick={page >= Math.ceil(count / rowsPerPage) - 1 ? null : () => changePage(page + 1)}
+               className={`w-6 h-6 cursor-pointer ${page >= Math.ceil(count / rowsPerPage) - 1 ?'text-gray-400 cursor-not-allowed' : 'text-blue-600'}  hover:text-red-600`}
+              />
+            
+          </div>
+        );
+      },
       
     };
   return (
@@ -136,7 +183,7 @@ const SliderList = () => {
       </div>
       <div className="mt-5">
         <MUIDataTable
-          data={sliderListData ? sliderListData : []}
+            data={sliderListData}
           columns={columns}
           options={options}
         />

@@ -71,9 +71,9 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
             
               <Link  to='/home'>
                 <Typography
-                  variant="standard"
+                 
                   color="black"
-                  className="font-normal opacity-50 transition-all hover:text-blue-500 hover:opacity-100"
+                  className=" font-bold text-lg opacity-50 transition-all hover:text-blue-500 hover:opacity-100"
                 >
                   Home
                 </Typography>
@@ -88,8 +88,8 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
           {/* Sidebar toggle button for mobile view */}
           <IconButton
             variant="text"
-            color="white"
-            className="grid xl:hidden"
+            
+            className="grid xl:hidden "
             onClick={() => setOpenSideNav(!openSideNav)}
           >
             <Bars3Icon strokeWidth={3} className="h-6 w-6 text-white" />
@@ -101,8 +101,8 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
             placement="bottom-end"
           >
             <MenuHandler>
-              <IconButton variant="text" color="white">
-                <UserCircleIcon className="h-5 w-5 text-red" />
+              <IconButton variant="text" >
+                <UserCircleIcon className="h-5 w-5 text-red-500 " />
               </IconButton>
             </MenuHandler>
             <MenuList className="bg-gray-700">
@@ -119,8 +119,8 @@ const DashboardNavbar = ({ openSideNav, setOpenSideNav }) => {
             </MenuList>
           </Menu>
           {/* Settings icon */}
-          <IconButton variant="text" color="white" onClick={handleOpenLogout}>
-            <HiArrowRightStartOnRectangle className="h-5 w-5 text-red" />
+          <IconButton variant="text"  onClick={handleOpenLogout}>
+            <HiArrowRightStartOnRectangle className="h-5 w-5 text-red-500 " />
           </IconButton>
         </div>
       </div>

@@ -18,7 +18,9 @@ import { PiCardholderLight } from "react-icons/pi";
 import { FiUsers } from "react-icons/fi";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
-import { MdOutlineAdd, MdOutlineBusinessCenter, MdOutlineDelete, MdOutlineSpaceDashboard, MdToday } from "react-icons/md";
+import { MdOutlineAdd, MdOutlineBusinessCenter, MdOutlineDelete, MdOutlineFeedback, MdOutlineSpaceDashboard, MdToday } from "react-icons/md";
+import { FcFeedback } from "react-icons/fc";
+import { IoIosNotificationsOutline } from "react-icons/io";
 const SideNav = ({ openSideNav, setOpenSideNav }) => {
   const sidenavRef = useRef(null);
   const { pathname } = useLocation();
@@ -53,6 +55,64 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
   useEffect(() => {
     setOpenSideNav(false);
   }, [pathname, setOpenSideNav]);
+
+  const sideItems = [
+    {
+      to: "/home",
+      label: "Dashboard",
+      Icon: MdOutlineSpaceDashboard,
+    },
+    {
+      to: "/member-list",
+      label: "Businesses",
+      Icon: MdOutlineBusinessCenter,
+    },
+    {
+      to: "/user-list",
+      label: "Consumers",
+      Icon: FiUsers,
+    },
+    {
+      to: "/category",
+      label: "Category",
+      Icon: TbCategory2,
+    },
+    {
+      to: "/adv-slider",
+      label: "Adv Slider",
+      Icon: TfiLayoutSlider,
+    },
+    {
+      to: "/popup-slider",
+      label: "Pop up Slider",
+      Icon: TbStackPop,
+    },
+    {
+      to: "/hold-user",
+      label: "Hold User",
+      Icon: PiCardholderLight,
+    },
+    {
+      to: "/delete-user",
+      label: "Delete User",
+      Icon: MdOutlineDelete,
+    },
+    {
+      to: "/product",
+      label: "Products",
+      Icon: CgProductHunt,
+    },
+    {
+      to: "/feedback",
+      label: "Feedback",
+      Icon: MdOutlineFeedback,
+    },
+    {
+      to: "/notification",
+      label: "Notification",
+      Icon: IoIosNotificationsOutline,
+    },
+  ];
 
   const handleBookingButtonClick = () => {
     // Toggle the booking menu open/close
@@ -96,7 +156,31 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
       </div>
       <div className="m-4">
         <ul className="mb-4  overflow-y-auto lg:h-[calc(100vh-150px)]  md:h-[calc(100vh-200px)] h-[calc(100vh-200px)] custom-scroll">
-          <li>
+   
+      {sideItems.map(({ to, label, Icon }, index) => (
+        <li key={index}>
+          <NavLink to={to}>
+            {({ isActive }) => (
+              <Button
+                variant={isActive ? "gradient" : "text"}
+                color="white"
+                className="flex items-center gap-4 px-4 capitalize"
+                fullWidth
+              >
+                <Icon className="w-5 h-5 text-inherit" />
+                <Typography
+                  color="inherit"
+                  className="font-medium capitalize"
+                >
+                  {label}
+                </Typography>
+              </Button>
+            )}
+          </NavLink>
+        </li>
+      ))}
+ 
+          {/* <li>
             <NavLink to="/home">
               {({ isActive }) => (
                 <Button
@@ -275,7 +359,7 @@ const SideNav = ({ openSideNav, setOpenSideNav }) => {
                 </Button>
               )}
             </NavLink>
-          </li>
+          </li> */}
           
 
           {/* Add more hardcoded routes here as needed */}

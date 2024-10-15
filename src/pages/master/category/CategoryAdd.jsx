@@ -29,6 +29,7 @@ const CategoryAdd = () => {
     category: "",
     category_type: "",
     category_image: "",
+    category_sort:"",
   });
   const [loading, setLoading] = useState(false);
   const { isPanelUp } = useContext(ContextPanel);
@@ -47,6 +48,7 @@ const CategoryAdd = () => {
     const data = new FormData();
     data.append("category", categories.category);
     data.append("category_type", categories.category_type);
+    data.append("category_sort", categories.category_sort);
     data.append("category_image", selectedFile);
 
     axios({
@@ -64,6 +66,7 @@ const CategoryAdd = () => {
           category: "",
           category_type: "",
           category_image: "",
+          category_sort:"",
         });
         navigate("/category");
       } else {
@@ -81,7 +84,7 @@ const CategoryAdd = () => {
       </div>
       <div className="w-full mt-5 p-4 bg-white shadow-lg rounded-xl">
         <form id="addIndiv" autoComplete="off" onSubmit={onSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {/* 1 */}
             <div className="form-group">
               <Input
@@ -145,6 +148,18 @@ const CategoryAdd = () => {
                 name="category_image"
                 onChange={(e) => setSelectedFile(e.target.files[0])}
                 className="w-full px-4 pb-2 border border-gray-400 rounded-md  transition-all"
+              />
+            </div>
+            <div className="form-group">
+              <Input
+                type="number"
+                min="0"
+                name="category_sort"
+                onChange={(e) => onInputChange(e)}
+                value={categories.category_sort}
+                label="Category Sort"
+                required
+                className="w-full px-4 py-3 border border-gray-400 rounded-md  transition-all"
               />
             </div>
           </div>

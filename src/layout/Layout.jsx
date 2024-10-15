@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-100 to-purple-100 ">
       <SideNav openSideNav={openSideNav} setOpenSideNav={setOpenSideNav} />
-      <div className="p-4 xl:ml-72">
+      <div className=" p-4 xl:ml-72">
         <DashboardNavbar
           openSideNav={openSideNav}
           setOpenSideNav={setOpenSideNav}
